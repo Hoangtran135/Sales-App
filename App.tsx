@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { initializeIP } from "./ipconfig";
 import LoginScreen from "./components/LoginScreen";
 import RegisterScreen from "./components/RegisterScreen";
 import HomeScreen from "./components/HomeScreen";
@@ -48,6 +49,11 @@ import Start from "./settings/Start";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // Tự động detect IP khi app khởi động
+  useEffect(() => {
+    initializeIP();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
