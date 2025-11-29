@@ -1,11 +1,17 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
 
 # Expo
 dist/
 web-build/
 expo-env.d.ts
+.expo/
 
 # Native
 *.orig.*
@@ -32,4 +38,11 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
-node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# OS
+Thumbs.db
