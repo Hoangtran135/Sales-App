@@ -25,8 +25,22 @@ const Start = () => {
           return;
         }
 
-        fetch(`${BASE_URL}/checkusers/${userId}`)
+        // Fetch với timeout (10 giây)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        fetch(`${BASE_URL}/checkusers/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          signal: controller.signal,
+        })
           .then((response) => {
+            clearTimeout(timeoutId);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
             console.log("🌐 Gọi API lấy thông tin user:", response.status);
             return response.json();
           })
@@ -54,8 +68,17 @@ const Start = () => {
             }
           })
           .catch((error) => {
+            clearTimeout(timeoutId);
             console.error("❌ Lỗi khi gọi API:", error);
-            Alert.alert("Lỗi", "Không thể kết nối đến máy chủ.");
+            let errorMessage = "Không thể kết nối đến máy chủ.";
+            
+            if (error.name === "AbortError" || error.message === "Network request timed out") {
+              errorMessage = "Kết nối quá lâu. Vui lòng kiểm tra IP server và thử lại.";
+            } else if (error.message.includes("Failed to fetch") || error.message.includes("NetworkError")) {
+              errorMessage = "Không thể kết nối đến server. Vui lòng kiểm tra IP và đảm bảo server đang chạy.";
+            }
+            
+            Alert.alert("Lỗi kết nối", errorMessage);
             navigation.reset({
               index: 0,
               routes: [{ name: "Trang Chủ" }],

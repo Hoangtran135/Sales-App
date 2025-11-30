@@ -49,7 +49,6 @@ import Start from "./settings/Start";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // Tự động detect IP khi app khởi động
   useEffect(() => {
     initializeIP();
   }, []);
